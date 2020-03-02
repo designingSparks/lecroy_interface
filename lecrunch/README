@@ -1,0 +1,107 @@
+LeCrunch version 1.1
+====================
+
+Installation
+------------
+
+LeCrunch requires a python version >= 2.6 and the following python packages:
+
+    numpy
+        The fundamental package needed for scientific computing with python.
+	On an ubuntu distribution:
+
+	~$ sudo apt-get install python-numpy
+
+    h5py
+        A general-purpose Python interface to the Hierarchical Data Format
+	Library. The source can be downloaded from <code.google.com/p/h5py>,
+	or on an ubuntu distribution:
+
+	~$ sudo apt-get install python-h5py
+
+    matplotlib
+        A python 2D plotting library which produces publication quality figures
+	in a variety of hardcopy formats and interactive environments across
+	platforms; on an ubuntu distribution:
+
+	~$ sudo apt-get install python-matplotlib
+
+After downloading LeCrunch, you should first edit the file "setup.py" and
+set the variable "scope_ip" to the ip address of your oscilloscope. If you're
+unsure of the ip address of your oscilloscope, just open up a web browser
+on the oscilloscope and go to www.whatsmyip.org.
+
+Then just source the env.sh file in this directory, and you're good to go!
+
+What is LeCrunch?
+-----------------
+
+LeCrunch is a set or libraries and scripts for communicating and extracting
+waveform traces from LeCroy X-stream oscilloscopes.
+
+How to use LeCrunch
+-------------------
+
+The syntax to fetch waveforms:
+
+~$ fetch.py <filename> [-n NUMBER OF TRACES] [-r NUMBER OF RUNS]
+
+where <filename> is the name of the file you would like LeCrunch to store the
+extracted waveforms; waveforms are stored in the hdf5 file format.
+
+Once you have fetched some waveforms you can plot an overlay with draw.py:
+
+~$ draw.py <filename>
+
+You can load and save the scope's configuration with config.py. Suppose you
+took some data a month ago and saved it to the file "run001.hdf5". Then, to
+restore the scope configuration as it was when you took that data, just run:
+
+~$ config.py load run001.hdf5
+
+In order to send commands directly to the oscilloscope you can run the file
+"sock.py" as a script:
+
+~$ sock.py "display?"
+'DISP ON\n'
+
+~$ sock.py "sequence?"
+'SEQ OFF,1000,25E+3 SAMPLE\n'
+
+~$ sock.py "seq on, 100"
+
+For a list of commands see the LeCroy Remote Control Manual. If you don't have
+a copy, just google it.
+
+How to Transfer Waveforms at High Speed
+---------------------------------------
+
+Turn on sequence mode!
+
+~$ sock.py 'seq on, 1000'
+
+Be aware that as you turn up the number of segments the scope will take
+longer to process a single acquisition. The default timeout value for the
+socket connection in sock.py is set to 2 seconds; therefore, if an acquisition
+takes longer than 2 seconds, the socket object may raise a timeout exception
+when you attempt to readout a waveform.
+
+How to Analyze the Waveforms
+----------------------------
+
+Example code to read the waveforms from an hdf5 file is coming soon.
+
+Documentation
+-------------
+
+Currently, this README file is the only documentation.
+
+Bug Reports
+-----------
+
+Please send bug reports to <tlatorre9@gmail.com>
+
+That's all folks!
+-----------------
+
+--Anthony LaTorre <tlatorre9@gmail.com>
